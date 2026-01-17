@@ -40,7 +40,7 @@ WATCHLIST = {
     "0x757e9b4bd0f30807510e96058a64d65006c5aef5": "王金龙地址",
     "0x56153c064c9fee25bc79ad8ca6bfac7212ab4c5c": "疑似项目方",
     "0xa6ce3189f420f0fd9e90760ad1e80ce1489e3b5e": "岩姐地址",
-    "0x1f40dd141d78ad7abb84b92a1bc112b0332f1ca9": "项目方相关2",
+    "0x1f40dd141d78ad7abb84b92a1bc112b0332f1ca9": "阳光总地址-",
     "0x971a72167acb3e0dfa6bb5092ad3361d02a1ba5a": "项目方相关3",
     "0x3263b632d5316a187f919d58750df082ebac9568": "项目方相关4",
     "0x6f69b0f14c37c90e7cce8c019a09ad8e1f2f66a9": "阳光总地址",
@@ -55,7 +55,10 @@ WATCHLIST = {
     "0x170e7baf244a95989d059b5a4af7a27a4e712616": "105nft",
     "0xa1763467317d8f18955c06e8be2d1909c6b611e2": "105nft",
     "0xd00a593da9d9f5769b4bcbb657d3559960165299": "101nft",
-    "0x8893002cf5978378db25f4648ab295ee0b0e54c5": "卢总钱包地址3"
+    "0x8893002cf5978378db25f4648ab295ee0b0e54c5": "卢总钱包地址3",
+    "0xd63c38f43f7ac86ed7332539f6d5a2b1e8c4b9bf": "阳光总相关1",
+    "0xe4610c83f441e623dcc4c40d0181f22b70eefa22": "阳光总相关2",
+    "0xd0dd914afa5e9e5c7f0e98142a7bf5c80a2318cc": "阳光总相关3"
 }
 # ============================================
 
@@ -875,4 +878,5 @@ if __name__ == "__main__":
         # 注意: webbrowser 已移除，适合 GitHub Actions
     else:
         print("❌ 抓取失败。")
+
 
