@@ -39,11 +39,11 @@ WATCHLIST = {
     "0x440264da99dd5502d815124951c3e03affe7a284": "温州张余寿",
     "0x757e9b4bd0f30807510e96058a64d65006c5aef5": "王金龙地址",
     "0x56153c064c9fee25bc79ad8ca6bfac7212ab4c5c": "疑似项目方",
-    "0xa6ce3189f420f0fd9e90760ad1e80ce1489e3b5e": "项目方相关1",
+    "0xa6ce3189f420f0fd9e90760ad1e80ce1489e3b5e": "岩姐地址",
     "0x1f40dd141d78ad7abb84b92a1bc112b0332f1ca9": "项目方相关2",
     "0x971a72167acb3e0dfa6bb5092ad3361d02a1ba5a": "项目方相关3",
     "0x3263b632d5316a187f919d58750df082ebac9568": "项目方相关4",
-    "0x6f69b0f14c37c90e7cce8c019a09ad8e1f2f66a9": "项目方相关5",
+    "0x6f69b0f14c37c90e7cce8c019a09ad8e1f2f66a9": "阳光总地址",
     "0xf470ccb11c23250ebae4bc632ffe93961850a63e": "王金龙线上营销",
     "0xa648ab10aa4b6911e80b58fef5f402bed96a93bc": "王金龙地址2",
     "0x7eac9d9f054d12aa6e2d499e181f5932ddc41a8c": "王金龙地址3",
@@ -875,3 +875,4 @@ if __name__ == "__main__":
         # 注意: webbrowser 已移除，适合 GitHub Actions
     else:
         print("❌ 抓取失败。")
+
