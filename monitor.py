@@ -370,6 +370,18 @@ def fetch_data(minters_set, db_old_keys):
     bis_amm_incoming = get_transfers(BIS_AMM_ADDRESS, "incoming", use_token_filter=False)   # +
     bis_amm_outgoing = get_transfers(BIS_AMM_ADDRESS, "outgoing", use_token_filter=False)    # -
 
+    # === 用户需求：合并 BIS SWAP 和 BIS AMM 数据 ===
+    # 创建 bis_amm_direct_incoming/outgoing：排除 BIS SWAP 地址，只保留用户直接转账记录
+    bis_amm_direct_incoming = {}
+    for addr, amount in bis_amm_incoming.items():
+        if addr.lower() != BIS_SWAP_ADDRESS.lower():
+            bis_amm_direct_incoming[addr] = amount
+
+    bis_amm_direct_outgoing = {}
+    for addr, amount in bis_amm_outgoing.items():
+        if addr.lower() != BIS_SWAP_ADDRESS.lower():
+            bis_amm_direct_outgoing[addr] = amount
+
     # === 核心逻辑：追踪用户的流动性操作 ===
     # 实际流程：用户 -> BIS SWAP -> BIS AMM (添加流动性)
     #          BIS AMM -> BIS SWAP -> 用户 (移除流动性)
@@ -453,36 +465,32 @@ def fetch_data(minters_set, db_old_keys):
                 # 2. 计算占比
                 percent = (bal / TOTAL_SUPPLY) * 100
 
-                # 3. 获取 BIS 转账数据
+                # 3. 获取 BIS 转账数据（合并 BIS SWAP 和 BIS AMM）
+                # 买币：转入到 BIS 的代币（包含 BIS SWAP 和 BIS AMM）
                 bis_swap_in = bis_swap_incoming.get(key, 0)
+                bis_amm_direct_in = bis_amm_direct_incoming.get(key, 0)
+                bis_in = bis_swap_in + bis_amm_direct_in  # 买币总额
+
+                # 卖币：从 BIS 转出的代币（主要是从 BIS SWAP 转出）
                 bis_swap_out = bis_swap_outgoing.get(key, 0)
+                bis_amm_direct_out = bis_amm_direct_outgoing.get(key, 0)
+                bis_out = bis_swap_out + bis_amm_direct_out  # 卖币总额
 
-                # 注意：用户通过 BIS SWAP 提供/移除流动性
-                # 所以用户转入到 BIS SWAP 的 NUTKIN = 他们添加到流动性池的代币
-                # BIS AMM 的接收记录里只有 BIS SWAP 地址，没有直接的用户地址
-                bis_amm_in = bis_swap_in  # 用户转入到 BIS SWAP = 添加流动性
-                bis_amm_out = bis_swap_out  # 用户从 BIS SWAP 转出 = 移除流动性
+                # 计算净头寸
+                bis_net = bis_in - bis_out
 
-                # 4. 计算总和：持仓 + BIS AMM 净流入
-                # 注意：不要重复计算 bis_swap_net，因为 bis_amm_net 已经包含了
-                bis_swap_net = bis_swap_in - bis_swap_out
-                bis_amm_net = bis_amm_in - bis_amm_out
-                total_balance = bal + bis_amm_net  # 只加 bis_amm_net，避免重复
+                # 4. 计算总和：当前余额 + BIS 净头寸
+                total_balance = bal + bis_net
 
                 # 5. 判断用户类型
                 is_potential_new = (key not in db_old_keys) and (len(db_old_keys) > 0)
 
-                # 判断是否是流动性提供者（通过 BIS SWAP 参与了流动性池）
-                is_lp = (bis_swap_in > 0 or bis_swap_out > 0)
-
-                # 判断是否是交易者（预留标记，目前所有参与 BIS 的都是 LP）
-                is_trader = False
+                # 判断是否参与过 BIS 交易
+                is_traded_bis = (bis_in > 0 or bis_out > 0)
 
                 status = ""
-                if is_lp:
-                    status = "LP"  # 流动性提供者
-                if is_trader:
-                    status = "TRADER"  # 交易者
+                if is_traded_bis:
+                    status = "BIS"  # 参与 BIS 交易
                 if is_potential_new and not status:
                     status = "CHECKING"
                     candidates_for_check.append(key)
@@ -495,11 +503,10 @@ def fetch_data(minters_set, db_old_keys):
                     "pct": percent,
                     "is_mint": is_mint,
                     "status": status,
-                    "bis_swap_in": bis_swap_in,
-                    "bis_swap_out": bis_swap_out,
-                    "bis_amm_in": bis_amm_in,
-                    "bis_amm_out": bis_amm_out,
-                    "total_balance": total_balance  # 新增：总和
+                    "bis_in": bis_in,           # 买币总额
+                    "bis_out": bis_out,         # 卖币总额
+                    "bis_net": bis_net,         # 净头寸
+                    "total_balance": total_balance  # 总持仓
                 })
 
                 # 记录到当前持有人字典
@@ -546,30 +553,27 @@ def fetch_data(minters_set, db_old_keys):
             if addr.lower() in [BIS_SWAP_ADDRESS.lower(), BIS_AMM_ADDRESS.lower()]:
                 continue
 
-            # 获取 BIS 数据
+            # 获取 BIS 数据（合并 BIS SWAP 和 BIS AMM）
             bis_swap_in = bis_swap_incoming.get(addr, 0)
-            bis_swap_out = bis_swap_outgoing.get(addr, 0)
+            bis_amm_direct_in = bis_amm_direct_incoming.get(addr, 0)
+            bis_in = bis_swap_in + bis_amm_direct_in  # 买币总额
 
-            # 注意：用户通过 BIS SWAP 提供/移除流动性
-            bis_amm_in = bis_swap_in  # 用户转入到 BIS SWAP = 添加流动性
-            bis_amm_out = bis_swap_out  # 用户从 BIS SWAP 转出 = 移除流动性
+            bis_swap_out = bis_swap_outgoing.get(addr, 0)
+            bis_amm_direct_out = bis_amm_direct_outgoing.get(addr, 0)
+            bis_out = bis_swap_out + bis_amm_direct_out  # 卖币总额
 
             # 只添加确实有 BIS 交易的地址
-            if bis_swap_in > 0 or bis_swap_out > 0:
-                # 计算总和（持仓为 0）
-                bis_swap_net = bis_swap_in - bis_swap_out
-                bis_amm_net = bis_amm_in - bis_amm_out
-                total_balance = bis_amm_net  # 只用 bis_amm_net，避免重复
+            if bis_in > 0 or bis_out > 0:
+                # 计算净头寸（持仓为 0）
+                bis_net = bis_in - bis_out
+                total_balance = bis_net
 
                 # 判断用户类型
-                is_lp = (bis_swap_in > 0 or bis_swap_out > 0)
-                is_trader = False
+                is_traded_bis = (bis_in > 0 or bis_out > 0)
 
                 status = "SOLD_OUT"  # 已卖完
-                if is_lp:
-                    status = "SOLD_OUT_LP"  # 已卖完的流动性提供者
-                elif is_trader:
-                    status = "SOLD_OUT_TRADER"  # 已卖完的交易者
+                if is_traded_bis:
+                    status = "SOLD_OUT_BIS"  # 已卖完的 BIS 交易者
 
                 sold_out_addresses.append({
                     "rank": 9999,  # 排在最后
@@ -579,10 +583,9 @@ def fetch_data(minters_set, db_old_keys):
                     "pct": 0,
                     "is_mint": False,
                     "status": status,
-                    "bis_swap_in": bis_swap_in,
-                    "bis_swap_out": bis_swap_out,
-                    "bis_amm_in": bis_amm_in,
-                    "bis_amm_out": bis_amm_out,
+                    "bis_in": bis_in,
+                    "bis_out": bis_out,
+                    "bis_net": bis_net,
                     "total_balance": total_balance
                 })
 
@@ -624,10 +627,9 @@ def generate_report(holders, db):
                 'pct': 0,
                 'is_mint': False,
                 'status': 'SOLD_OUT',  # 已卖完
-                'bis_swap_in': 0,
-                'bis_swap_out': 0,
-                'bis_amm_in': 0,
-                'bis_amm_out': 0,
+                'bis_in': 0,
+                'bis_out': 0,
+                'bis_net': 0,
                 'total_balance': 0,
                 'rank': 9999
             }
@@ -673,10 +675,6 @@ def generate_report(holders, db):
         if h['is_mint'] and key != PROJECT_WALLET.lower():
             note = "🎁 [MINT] " + note
 
-        # 计算BIS净流入
-        bis_swap_net = h.get('bis_swap_in', 0) - h.get('bis_swap_out', 0)
-        bis_amm_net = h.get('bis_amm_in', 0) - h.get('bis_amm_out', 0)
-
         table_data.append({
             "rank": h['rank'],
             "key": key,
@@ -687,13 +685,10 @@ def generate_report(holders, db):
             "note": note,
             "status": h['status'],
             "is_new_day": (len(history) == 1),
-            "bis_swap_in": h.get('bis_swap_in', 0),
-            "bis_swap_out": h.get('bis_swap_out', 0),
-            "bis_swap_net": bis_swap_net,  # BIS SWAP净流入，用于排序
-            "bis_amm_in": h.get('bis_amm_in', 0),
-            "bis_amm_out": h.get('bis_amm_out', 0),
-            "bis_amm_net": bis_amm_net,  # BIS AMM净流入，用于排序
-            "total_balance": h['total_balance']  # 总和
+            "bis_in": h.get('bis_in', 0),       # 买币总额
+            "bis_out": h.get('bis_out', 0),     # 卖币总额
+            "bis_net": h.get('bis_net', 0),     # 净头寸
+            "total_balance": h['total_balance']  # 总持仓
         })
 
     # 按总和排序，已卖完的（总和<=0）排在后面
@@ -764,9 +759,10 @@ def generate_report(holders, db):
                 <th onclick="sort('rank')" style="width:60px;">排名 ⇵</th>
                 <th onclick="sort('key')">地址 (0x / btc)</th>
                 <th onclick="sort('bal')" style="width:120px;">持仓 ⇵</th>
-                <th onclick="sort('bis_swap_net')" style="width:130px;">BIS SWAP ⇵<br><span style="font-size:10px;color:#666">净流入(+/-)</span></th>
-                <th onclick="sort('bis_amm_net')" style="width:130px;">BIS AMM ⇵<br><span style="font-size:10px;color:#666">净流入(+/-)</span></th>
-                <th onclick="sort('total_balance')" style="width:130px;">总和 ⇵</th>
+                <th onclick="sort('bis_in')" style="width:130px;">BIS买入 ⇵<br><span style="font-size:10px;color:#666">转入金额</span></th>
+                <th onclick="sort('bis_out')" style="width:130px;">BIS卖出 ⇵<br><span style="font-size:10px;color:#666">转出金额</span></th>
+                <th onclick="sort('bis_net')" style="width:130px;">BIS净头寸 ⇵<br><span style="font-size:10px;color:#666">买入-卖出</span></th>
+                <th onclick="sort('total_balance')" style="width:130px;">总持仓 ⇵</th>
                 <th onclick="sort('pct')" style="width:90px;">占比 % ⇵</th>
                 <th onclick="sort('change')" style="width:130px;">24H 变化 ⇵</th>
                 <th style="width:60px;">趋势</th>
@@ -831,42 +827,43 @@ def generate_report(holders, db):
                 chgText = item.change.toLocaleString('en-US', {{maximumFractionDigits: 0}}) + " ▼";
             }}
 
-            // BIS SWAP 净流入 = 转入 - 转出
-            let bisSwapNet = item.bis_swap_in - item.bis_swap_out;
-            let bisSwapNetStr = "";
-            if(bisSwapNet > 0) {{
-                bisSwapNetStr = `<span style="color:#4caf50">+${{bisSwapNet.toLocaleString('en-US', {{maximumFractionDigits: 0}})}}</span>`;
-            }} else if(bisSwapNet < 0) {{
-                bisSwapNetStr = `<span style="color:#f44336">${{bisSwapNet.toLocaleString('en-US', {{maximumFractionDigits: 0}})}}</span>`;
+            // BIS 买币（转入）
+            let bisInStr = "";
+            if(item.bis_in > 0) {{
+                bisInStr = `<span style="color:#4caf50">📥 ${{item.bis_in.toLocaleString('en-US', {{maximumFractionDigits: 0}})}}</span>`;
             }} else {{
-                bisSwapNetStr = '<span style="color:#666">0</span>';
+                bisInStr = '<span style="color:#666">0</span>';
             }}
 
-            // BIS AMM 净流入 = 转入 - 转出
-            let bisAmmNet = item.bis_amm_in - item.bis_amm_out;
-            let bisAmmNetStr = "";
-            if(bisAmmNet > 0) {{
-                bisAmmNetStr = `<span style="color:#4caf50">+${{bisAmmNet.toLocaleString('en-US', {{maximumFractionDigits: 0}})}}</span>`;
-            }} else if(bisAmmNet < 0) {{
-                bisAmmNetStr = `<span style="color:#f44336">${{bisAmmNet.toLocaleString('en-US', {{maximumFractionDigits: 0}})}}</span>`;
+            // BIS 卖币（转出）
+            let bisOutStr = "";
+            if(item.bis_out > 0) {{
+                bisOutStr = `<span style="color:#f44336">📤 ${{item.bis_out.toLocaleString('en-US', {{maximumFractionDigits: 0}})}}</span>`;
             }} else {{
-                bisAmmNetStr = '<span style="color:#666">0</span>';
+                bisOutStr = '<span style="color:#666">0</span>';
             }}
 
-            // 总和 = 持仓 + BIS SWAP净额 + BIS AMM净额
+            // BIS 净头寸 = 买入 - 卖出
+            let bisNet = item.bis_net;
+            let bisNetStr = "";
+            if(bisNet > 0) {{
+                bisNetStr = `<span style="color:#4caf50">+${{bisNet.toLocaleString('en-US', {{maximumFractionDigits: 0}})}}</span>`;
+            }} else if(bisNet < 0) {{
+                bisNetStr = `<span style="color:#f44336">${{bisNet.toLocaleString('en-US', {{maximumFractionDigits: 0}})}}</span>`;
+            }} else {{
+                bisNetStr = '<span style="color:#666">0</span>';
+            }}
+
+            // 总持仓 = 当前余额 + BIS净头寸
             let totalBalanceStr = item.total_balance.toLocaleString('en-US', {{maximumFractionDigits: 0}});
 
             let tags = "";
             // 已卖完标签
             if(item.status === "SOLD_OUT") tags += "<span class='soldout-tag'>💸 已卖完</span>";
-            // 已卖完的流动性提供者标签
-            if(item.status === "SOLD_OUT_LP") tags += "<span class='soldout-lp-tag'>💸 已卖完 LP</span>";
-            // 已卖完的交易者标签
-            if(item.status === "SOLD_OUT_TRADER") tags += "<span class='soldout-trader-tag'>💸 已卖完 交易</span>";
-            // 流动性提供者标签
-            if(item.status === "LP") tags += "<span class='lp-tag'>💧 LP</span>";
-            // 交易者标签
-            if(item.status === "TRADER") tags += "<span class='trader-tag'>🔄 交易</span>";
+            // 已卖完的 BIS 交易者标签
+            if(item.status === "SOLD_OUT_BIS") tags += "<span class='soldout-bis-tag'>💸 已卖完 BIS</span>";
+            // BIS 交易者标签
+            if(item.status === "BIS") tags += "<span class='bis-tag'>💧 BIS</span>";
             // 新地址标签
             if(item.status === "NEW") tags += "<span class='new-tag'>🔥 NEW</span>";
             // 回归标签
@@ -887,8 +884,9 @@ def generate_report(holders, db):
                     <td>#${{item.rank}}</td>
                     <td>${{tags}}<span class="addr-0x">${{item.key}}</span><span class="addr-btc">${{item.btc}}</span></td>
                     <td style="color:#fff;font-weight:bold">${{balStr}}</td>
-                    <td>${{bisSwapNetStr}}</td>
-                    <td>${{bisAmmNetStr}}</td>
+                    <td>${{bisInStr}}</td>
+                    <td>${{bisOutStr}}</td>
+                    <td>${{bisNetStr}}</td>
                     <td style="color:#00bcd4;font-weight:bold">${{totalBalanceStr}}</td>
                     <td style="color:#aaa">${{pctStr}}</td>
                     <td class="${{chgClass}}">${{chgText}}</td>
@@ -959,7 +957,7 @@ def generate_report(holders, db):
                 plugins: {{
                     title: {{
                         display: true,
-                        text: '地址: '+key + ' - 总持仓趋势 (包含BIS SWAP和BIS AMM)',
+                        text: '地址: '+key + ' - 总持仓趋势 (含当前余额 + BIS净头寸)',
                         color:'#fff',
                         font:{{size:14}}
                     }},
