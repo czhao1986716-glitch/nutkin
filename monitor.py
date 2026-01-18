@@ -1,8 +1,15 @@
 import requests
 import json
 import os
+import sys
+import io
 import datetime
 from datetime import timedelta, timezone
+
+# 修复 Windows 控制台编码问题
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 # ================= ⚙️ 配置区 =================
 # 1. 核心数据源 (BestInSlot V2 - 速度最快)
@@ -15,7 +22,8 @@ PROJECT_WALLET = "0xa07764097a4da7f3b61a562ca1f8e6779494748c"
 
 # BIS SWAP 和 BIS AMM 目标地址
 BIS_SWAP_ADDRESS = "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7"
-BIS_AMM_ADDRESS = "0x17DBb1fA0c7A70dB033E91d080ed0b87bc6Bd542"
+# BIS AMM: 流动性池子地址 (持有约 28M NUTKIN 代币)
+BIS_AMM_ADDRESS = "0x5463191b2705596b89e000fdcd60206daa2df8ff"
 
 # 3. 代币总量 (用于计算占比)
 TOTAL_SUPPLY = 999703067  # 如果 nutkin 有不同的总量，需要修改这里
@@ -28,7 +36,7 @@ HTML_FILE = "nutkin_monitor_v35_plus.html"
 WATCHLIST = {
     "0xa07764097a4da7f3b61a562ca1f8e6779494748c": "🥇 榜一 (项目方)",
     "0x899cdf7bf5cf1c5a1b3c9afab2faf55482b97662": "🥈 榜二 (池子)",
-        "0xbacb6e7774bb84dfcc0f5ad89c51782eade91f7e": "大宇钱包",
+    "0xbacb6e7774bb84dfcc0f5ad89c51782eade91f7e": "大宇钱包",
     "0xd3a5b717ab78f6075def527f070b9ee0dc662828": "BIS",
     "0x63160c1f9f071b57b6860bd8de66c7cb87295014": "CATSWAP",
     "0xf97ed5736eb42b0056b030e56349b3f48fce1898": "岩姐线上伙伴--8sats",
@@ -58,7 +66,9 @@ WATCHLIST = {
     "0x8893002cf5978378db25f4648ab295ee0b0e54c5": "卢总钱包地址3",
     "0xd63c38f43f7ac86ed7332539f6d5a2b1e8c4b9bf": "阳光总相关1",
     "0xe4610c83f441e623dcc4c40d0181f22b70eefa22": "阳光总相关2",
-    "0xd0dd914afa5e9e5c7f0e98142a7bf5c80a2318cc": "阳光总相关3"
+    "0xd0dd914afa5e9e5c7f0e98142a7bf5c80a2318cc": "阳光总相关3",
+    "0x5463191b2705596b89e000fdcd60206daa2df8ff": "bisamm",
+    "0x250b25bd16d28b6a311918895f24ed32b9affc06": "毛毛姐"
 }
 # ============================================
 
@@ -139,17 +149,21 @@ def check_is_truly_new(address):
     return True
 
 # === 核心功能 3: 获取目标地址的所有转账记录 ===
-def get_transfers(target_address, direction="incoming"):
+def get_transfers(target_address, direction="incoming", use_token_filter=True):
     """
     获取目标地址的转账记录
     参数：
         target_address: 目标地址（如 bis swap 或 bis amm）
         direction: "incoming" 接收记录, "outgoing" 发送记录
+        use_token_filter: 是否只查询 NUTKIN 代币（True）还是所有代币（False）
     返回：
         字典：{地址: 总数量}
     """
     url = f"{EXPLORER_API}/addresses/{target_address}/token-transfers"
-    params = {"token": TOKEN_CONTRACT, "type": "ERC-20", "limit": 100}
+    params = {"type": "ERC-20", "limit": 100}
+    # 如果启用代币过滤，添加 token 参数
+    if use_token_filter:
+        params["token"] = TOKEN_CONTRACT
     headers = {"User-Agent": "Mozilla/5.0"}
 
     transfer_data = {}  # {address: total_amount}
@@ -189,10 +203,13 @@ def get_transfers(target_address, direction="incoming"):
                     print(f"      {i+1}. 发送方: {from_addr[:20]}... → 接收方: {to_addr[:20]}... | 金额: {actual_amount:.2f} | 合约: {token_addr[:20]}...")
 
             for item in items:
-                # 校验合约
+                # 获取代币地址
                 token_addr = item.get('token', {}).get('address', '')
-                if token_addr.lower() != TOKEN_CONTRACT.lower():
-                    continue
+
+                # 如果启用了代币过滤，校验合约地址
+                if use_token_filter:
+                    if token_addr.lower() != TOKEN_CONTRACT.lower():
+                        continue
 
                 # 获取发送方和接收方地址
                 from_addr = item.get('from', {}).get('hash', '').lower()
@@ -251,6 +268,24 @@ def get_transfers(target_address, direction="incoming"):
         traceback.print_exc()
 
     return transfer_data
+
+# === 新增：直接从 BestInSlot 获取流动性数据 ===
+def get_liquidity_providers_from_bis():
+    """
+    从 BestInSlot 获取流动性提供者数据
+    由于没有专门的 API，我们尝试不同的方法
+    """
+    print(f"   💾 尝试获取 BIS 流动性数据...")
+
+    # 方法1: 尝试通过交易历史获取
+    # 注意：这个方法可能不会返回所有数据，因为添加流动性不是标准的 ERC-20 转账
+    liquidity_data = {}
+
+    # 这里可以添加其他获取流动性数据的方法
+    # 例如：通过解析 bestinslot 页面的 JavaScript 变量
+    # 或者通过其他 API 端点
+
+    return liquidity_data
 
 # === 保存 BIS 数据到文件 ===
 def save_bis_data(bis_swap_data, bis_amm_data, lp_data=None):
@@ -331,18 +366,37 @@ def fetch_data(minters_set, db_old_keys):
     bis_swap_outgoing = get_transfers(BIS_SWAP_ADDRESS, "outgoing")  # -
 
     # BIS AMM: 接收记录(添加流动性)和发送记录(移除流动性)
-    bis_amm_incoming = get_transfers(BIS_AMM_ADDRESS, "incoming")   # +
-    bis_amm_outgoing = get_transfers(BIS_AMM_ADDRESS, "outgoing")    # -
+    # 注意：BIS AMM 查询时不使用代币过滤，因为添加流动性可能涉及多个代币
+    bis_amm_incoming = get_transfers(BIS_AMM_ADDRESS, "incoming", use_token_filter=False)   # +
+    bis_amm_outgoing = get_transfers(BIS_AMM_ADDRESS, "outgoing", use_token_filter=False)    # -
+
+    # === 核心逻辑：追踪用户的流动性操作 ===
+    # 实际流程：用户 -> BIS SWAP -> BIS AMM (添加流动性)
+    #          BIS AMM -> BIS SWAP -> 用户 (移除流动性)
+
+    # BIS SWAP -> BIS AMM 的转账表示添加流动性（从池子角度看）
+    bis_swap_to_amm_in = bis_amm_incoming.get(BIS_SWAP_ADDRESS.lower(), 0)
+    # BIS AMM -> BIS SWAP 的转账表示移除流动性
+    bis_swap_to_amm_out = bis_amm_outgoing.get(BIS_SWAP_ADDRESS.lower(), 0)
+
+    print(f"\n   💡 BIS SWAP -> BIS AMM 流动性:")
+    print(f"      添加流动性: {bis_swap_to_amm_in:,.2f}")
+    print(f"      移除流动性: {bis_swap_to_amm_out:,.2f}")
+    print(f"      净流入: {bis_swap_to_amm_in - bis_swap_to_amm_out:,.2f}")
 
     # 创建流动性提供者完整榜单（包括没有持仓的地址）
     lp_providers = {}
-    for addr, amount_in in bis_amm_incoming.items():
-        amount_out = bis_amm_outgoing.get(addr, 0)
-        lp_providers[addr] = {
-            'in': amount_in,
-            'out': amount_out,
-            'net': amount_in - amount_out
-        }
+
+    # 注意：实际的流动性操作流程是 用户 -> BIS SWAP -> BIS AMM
+    # 所以 BIS AMM 只记录与 BIS SWAP 的转账，不直接记录用户地址
+    # 我们将 BIS SWAP 作为流动性池的代表来统计
+
+    # 将 BIS SWAP 作为流动性池的代表
+    lp_providers[BIS_SWAP_ADDRESS.lower()] = {
+        'in': bis_swap_to_amm_in,
+        'out': bis_swap_to_amm_out,
+        'net': bis_swap_to_amm_in - bis_swap_to_amm_out
+    }
 
     # 按净流入排序
     sorted_lp = sorted(lp_providers.items(), key=lambda x: x[1]['net'], reverse=True)
@@ -371,6 +425,9 @@ def fetch_data(minters_set, db_old_keys):
 
         holders = []
         candidates_for_check = []
+
+        # 创建当前持有人字典
+        current_holders_map = {}
 
         for item in items:
             ox = item.get('evm_wallet')
@@ -432,6 +489,9 @@ def fetch_data(minters_set, db_old_keys):
                     "total_balance": total_balance  # 新增：总和
                 })
 
+                # 记录到当前持有人字典
+                current_holders_map[key] = True
+
         # === 批量验真 ===
         if candidates_for_check:
             print(f"🕵️‍♂️ [3/3] 正在核实 {len(candidates_for_check)} 个新出现的地址...")
@@ -454,6 +514,67 @@ def fetch_data(minters_set, db_old_keys):
                 if h['status'] == "CHECKING":
                     h['status'] = cache.get(h['key'], "NEW")
             print("\n✅ 核实完成。")
+
+        # === 添加已卖完但参与过 BIS 的地址 ===
+        print(f"🔍 [额外] 正在查找参与过 BIS 交易但当前持仓为 0 的地址...")
+
+        # 收集所有参与过 BIS SWAP 或 BIS AMM 的地址
+        bis_swap_addresses = set(bis_swap_incoming.keys()) | set(bis_swap_outgoing.keys())
+        bis_amm_addresses = set(bis_amm_incoming.keys()) | set(bis_amm_outgoing.keys())
+        all_bis_addresses = bis_swap_addresses | bis_amm_addresses
+
+        # 过滤出当前持仓为 0 但参与过 BIS 的地址
+        sold_out_addresses = []
+        for addr in all_bis_addresses:
+            # 跳过已经在当前持有人列表中的地址
+            if addr.lower() in current_holders_map:
+                continue
+            # 跳过 BIS SWAP 和 BIS AMM 地址本身
+            if addr.lower() in [BIS_SWAP_ADDRESS.lower(), BIS_AMM_ADDRESS.lower()]:
+                continue
+
+            # 获取 BIS 数据
+            bis_swap_in = bis_swap_incoming.get(addr, 0)
+            bis_swap_out = bis_swap_outgoing.get(addr, 0)
+            bis_amm_in = bis_amm_incoming.get(addr, 0)
+            bis_amm_out = bis_amm_outgoing.get(addr, 0)
+
+            # 只添加确实有 BIS 交易的地址
+            if bis_swap_in > 0 or bis_swap_out > 0 or bis_amm_in > 0 or bis_amm_out > 0:
+                # 计算总和（持仓为 0）
+                bis_swap_net = bis_swap_in - bis_swap_out
+                bis_amm_net = bis_amm_in - bis_amm_out
+                total_balance = bis_swap_net + bis_amm_net
+
+                # 判断用户类型
+                is_lp = (bis_amm_in > 0 or bis_amm_out > 0)
+                is_trader = (bis_swap_in > 0 or bis_swap_out > 0) and not is_lp
+
+                status = "SOLD_OUT"  # 已卖完
+                if is_lp:
+                    status = "SOLD_OUT_LP"  # 已卖完的流动性提供者
+                elif is_trader:
+                    status = "SOLD_OUT_TRADER"  # 已卖完的交易者
+
+                sold_out_addresses.append({
+                    "rank": 9999,  # 排在最后
+                    "key": addr,
+                    "btc": "-",  # 没有 BTC 地址信息
+                    "bal": 0,  # 当前持仓为 0
+                    "pct": 0,
+                    "is_mint": False,
+                    "status": status,
+                    "bis_swap_in": bis_swap_in,
+                    "bis_swap_out": bis_swap_out,
+                    "bis_amm_in": bis_amm_in,
+                    "bis_amm_out": bis_amm_out,
+                    "total_balance": total_balance
+                })
+
+        print(f"   ✅ 找到 {len(sold_out_addresses)} 个已卖完但参与过 BIS 的地址")
+
+        # 将这些地址添加到持有人列表
+        holders.extend(sold_out_addresses)
 
         return holders
     except Exception as e:
@@ -597,6 +718,8 @@ def generate_report(holders, db):
         .lp-tag{{background:#00e676;color:#000;padding:2px 4px;font-size:10px;border-radius:3px;font-weight:bold;margin-right:4px}}
         .trader-tag{{background:#ff9800;color:#000;padding:2px 4px;font-size:10px;border-radius:3px;font-weight:bold;margin-right:4px}}
         .soldout-tag{{background:#607d8b;color:#fff;padding:2px 4px;font-size:10px;border-radius:3px;margin-right:4px}}
+        .soldout-lp-tag{{background:#009688;color:#fff;padding:2px 4px;font-size:10px;border-radius:3px;margin-right:4px}}
+        .soldout-trader-tag{{background:#ff5722;color:#fff;padding:2px 4px;font-size:10px;border-radius:3px;margin-right:4px}}
         .rem{{background:#9e9e9e;color:#fff;padding:2px 4px;font-size:10px;border-radius:3px}}
 
         .btn{{background:#333;border:1px solid #555;color:#fff;cursor:pointer;padding:4px 8px;border-radius:4px}}
@@ -721,6 +844,10 @@ def generate_report(holders, db):
             let tags = "";
             // 已卖完标签
             if(item.status === "SOLD_OUT") tags += "<span class='soldout-tag'>💸 已卖完</span>";
+            // 已卖完的流动性提供者标签
+            if(item.status === "SOLD_OUT_LP") tags += "<span class='soldout-lp-tag'>💸 已卖完 LP</span>";
+            // 已卖完的交易者标签
+            if(item.status === "SOLD_OUT_TRADER") tags += "<span class='soldout-trader-tag'>💸 已卖完 交易</span>";
             // 流动性提供者标签
             if(item.status === "LP") tags += "<span class='lp-tag'>💧 LP</span>";
             // 交易者标签
@@ -878,5 +1005,3 @@ if __name__ == "__main__":
         # 注意: webbrowser 已移除，适合 GitHub Actions
     else:
         print("❌ 抓取失败。")
-
-
