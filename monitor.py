@@ -456,23 +456,27 @@ def fetch_data(minters_set, db_old_keys):
                 # 3. 获取 BIS 转账数据
                 bis_swap_in = bis_swap_incoming.get(key, 0)
                 bis_swap_out = bis_swap_outgoing.get(key, 0)
-                bis_amm_in = bis_amm_incoming.get(key, 0)
-                bis_amm_out = bis_amm_outgoing.get(key, 0)
 
-                # 4. 计算总和：持仓 + BIS SWAP(净流入) + BIS AMM(净流入)
-                # 净流入 = 转入 - 转出
+                # 注意：用户通过 BIS SWAP 提供/移除流动性
+                # 所以用户转入到 BIS SWAP 的 NUTKIN = 他们添加到流动性池的代币
+                # BIS AMM 的接收记录里只有 BIS SWAP 地址，没有直接的用户地址
+                bis_amm_in = bis_swap_in  # 用户转入到 BIS SWAP = 添加流动性
+                bis_amm_out = bis_swap_out  # 用户从 BIS SWAP 转出 = 移除流动性
+
+                # 4. 计算总和：持仓 + BIS AMM 净流入
+                # 注意：不要重复计算 bis_swap_net，因为 bis_amm_net 已经包含了
                 bis_swap_net = bis_swap_in - bis_swap_out
                 bis_amm_net = bis_amm_in - bis_amm_out
-                total_balance = bal + bis_swap_net + bis_amm_net
+                total_balance = bal + bis_amm_net  # 只加 bis_amm_net，避免重复
 
                 # 5. 判断用户类型
                 is_potential_new = (key not in db_old_keys) and (len(db_old_keys) > 0)
 
-                # 判断是否是流动性提供者（参与了BIS AMM）
-                is_lp = (bis_amm_in > 0 or bis_amm_out > 0)
+                # 判断是否是流动性提供者（通过 BIS SWAP 参与了流动性池）
+                is_lp = (bis_swap_in > 0 or bis_swap_out > 0)
 
-                # 判断是否是交易者（只在BIS SWAP交易）
-                is_trader = (bis_swap_in > 0 or bis_swap_out > 0) and not is_lp
+                # 判断是否是交易者（预留标记，目前所有参与 BIS 的都是 LP）
+                is_trader = False
 
                 status = ""
                 if is_lp:
@@ -545,19 +549,21 @@ def fetch_data(minters_set, db_old_keys):
             # 获取 BIS 数据
             bis_swap_in = bis_swap_incoming.get(addr, 0)
             bis_swap_out = bis_swap_outgoing.get(addr, 0)
-            bis_amm_in = bis_amm_incoming.get(addr, 0)
-            bis_amm_out = bis_amm_outgoing.get(addr, 0)
+
+            # 注意：用户通过 BIS SWAP 提供/移除流动性
+            bis_amm_in = bis_swap_in  # 用户转入到 BIS SWAP = 添加流动性
+            bis_amm_out = bis_swap_out  # 用户从 BIS SWAP 转出 = 移除流动性
 
             # 只添加确实有 BIS 交易的地址
-            if bis_swap_in > 0 or bis_swap_out > 0 or bis_amm_in > 0 or bis_amm_out > 0:
+            if bis_swap_in > 0 or bis_swap_out > 0:
                 # 计算总和（持仓为 0）
                 bis_swap_net = bis_swap_in - bis_swap_out
                 bis_amm_net = bis_amm_in - bis_amm_out
-                total_balance = bis_swap_net + bis_amm_net
+                total_balance = bis_amm_net  # 只用 bis_amm_net，避免重复
 
                 # 判断用户类型
-                is_lp = (bis_amm_in > 0 or bis_amm_out > 0)
-                is_trader = (bis_swap_in > 0 or bis_swap_out > 0) and not is_lp
+                is_lp = (bis_swap_in > 0 or bis_swap_out > 0)
+                is_trader = False
 
                 status = "SOLD_OUT"  # 已卖完
                 if is_lp:
