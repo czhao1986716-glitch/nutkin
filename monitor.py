@@ -384,19 +384,28 @@ def fetch_data(minters_set, db_old_keys):
     print(f"      移除流动性: {bis_swap_to_amm_out:,.2f}")
     print(f"      净流入: {bis_swap_to_amm_in - bis_swap_to_amm_out:,.2f}")
 
-    # 创建流动性提供者完整榜单（包括没有持仓的地址）
+    # 创建流动性提供者完整榜单
+    # 逻辑：所有转入 NUTKIN 到 BIS SWAP 的地址都是流动性提供者
+    # 因为这些代币最终会进入 BIS AMM 池子
     lp_providers = {}
 
-    # 注意：实际的流动性操作流程是 用户 -> BIS SWAP -> BIS AMM
-    # 所以 BIS AMM 只记录与 BIS SWAP 的转账，不直接记录用户地址
-    # 我们将 BIS SWAP 作为流动性池的代表来统计
+    # 遍历所有转入到 BIS SWAP 的地址
+    for addr, amount in bis_swap_incoming.items():
+        # 跳过 BIS AMM 地址本身（这是移除流动性回来的代币）
+        if addr.lower() == BIS_AMM_ADDRESS.lower():
+            continue
 
-    # 将 BIS SWAP 作为流动性池的代表
-    lp_providers[BIS_SWAP_ADDRESS.lower()] = {
-        'in': bis_swap_to_amm_in,
-        'out': bis_swap_to_amm_out,
-        'net': bis_swap_to_amm_in - bis_swap_to_amm_out
-    }
+        # 获取该地址从 BIS SWAP 转出的金额（移除流动性）
+        amount_out = bis_swap_outgoing.get(addr, 0)
+
+        # 计算净流入
+        net_inflow = amount - amount_out
+
+        lp_providers[addr.lower()] = {
+            'in': amount,
+            'out': amount_out,
+            'net': net_inflow
+        }
 
     # 按净流入排序
     sorted_lp = sorted(lp_providers.items(), key=lambda x: x[1]['net'], reverse=True)
