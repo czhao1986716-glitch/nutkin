@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-02-18T03:34:58.325921+00:00",
+  "timestamp": "2026-02-19T03:34:06.564368+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
       "total_senders": 500,
-      "total_amount": 382505475.20554334,
+      "total_amount": 385657763.20554334,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 110687962.0456588
+          "amount": 110727962.0456588
         },
         {
           "address": "0x757e9b4bd0f30807510e96058a64d65006c5aef5",
@@ -43,12 +43,12 @@
           "amount": 4530000.0
         },
         {
-          "address": "0x131bd61cd40ba3163faed61c783f221d97cc138e",
-          "amount": 4350476.0
+          "address": "0x095c188e20940129d9397186e564c7072c593637",
+          "amount": 4395900.0
         },
         {
-          "address": "0x095c188e20940129d9397186e564c7072c593637",
-          "amount": 3895900.0
+          "address": "0x131bd61cd40ba3163faed61c783f221d97cc138e",
+          "amount": 4350476.0
         },
         {
           "address": "0xefb726566ce4ec412e52f155cd48b039b09a51c7",
@@ -90,11 +90,11 @@
     },
     "outgoing": {
       "total_receivers": 38,
-      "total_amount": 249180380.60204405,
+      "total_amount": 252128903.81901604,
       "top_receivers": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 231790764.84629837
+          "amount": 234739288.06327036
         },
         {
           "address": "0x757e9b4bd0f30807510e96058a64d65006c5aef5",
@@ -179,21 +179,21 @@
     "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
     "incoming": {
       "total_senders": 1,
-      "total_amount": 231790778.1174412,
+      "total_amount": 234739301.36994871,
       "top_senders": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 231790778.1174412
+          "amount": 234739301.36994871
         }
       ]
     },
     "outgoing": {
       "total_receivers": 2,
-      "total_amount": 110687968.75347982,
+      "total_amount": 110727968.87687553,
       "top_receivers": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 110687968.7139284
+          "amount": 110727968.83732411
         },
         {
           "address": "0x0000000000000000000000000000000000000000",
@@ -242,6 +242,12 @@
         "total_out": 0
       },
       {
+        "address": "0x095c188e20940129d9397186e564c7072c593637",
+        "net_inflow": 4395900.0,
+        "total_in": 4395900.0,
+        "total_out": 0
+      },
+      {
         "address": "0x131bd61cd40ba3163faed61c783f221d97cc138e",
         "net_inflow": 4350476.0,
         "total_in": 4350476.0,
@@ -252,12 +258,6 @@
         "net_inflow": 4171866.0,
         "total_in": 8343732.0,
         "total_out": 4171866.0
-      },
-      {
-        "address": "0x095c188e20940129d9397186e564c7072c593637",
-        "net_inflow": 3895900.0,
-        "total_in": 3895900.0,
-        "total_out": 0
       },
       {
         "address": "0xefb726566ce4ec412e52f155cd48b039b09a51c7",
