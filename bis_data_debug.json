@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-02-24T03:31:56.005087+00:00",
+  "timestamp": "2026-02-25T03:33:04.087561+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
-      "total_senders": 505,
-      "total_amount": 399437025.82872725,
+      "total_senders": 515,
+      "total_amount": 408348830.7713002,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 117842188.3414703
+          "amount": 120719564.50201985
         },
         {
           "address": "0x757e9b4bd0f30807510e96058a64d65006c5aef5",
@@ -27,16 +27,16 @@
           "amount": 5452090.0
         },
         {
+          "address": "0x095c188e20940129d9397186e564c7072c593637",
+          "amount": 5395900.0
+        },
+        {
           "address": "0x1049b9e0df0147b5bd9227ee788c96246c34afd4",
           "amount": 5000000.0
         },
         {
           "address": "0x6f69b0f14c37c90e7cce8c019a09ad8e1f2f66a9",
           "amount": 5000000.0
-        },
-        {
-          "address": "0x095c188e20940129d9397186e564c7072c593637",
-          "amount": 4945900.0
         },
         {
           "address": "0xa648ab10aa4b6911e80b58fef5f402bed96a93bc",
@@ -89,12 +89,12 @@
       ]
     },
     "outgoing": {
-      "total_receivers": 40,
-      "total_amount": 263337313.34122992,
+      "total_receivers": 41,
+      "total_amount": 270972776.2659307,
       "top_receivers": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 244854906.31458995
+          "amount": 251959620.23929074
         },
         {
           "address": "0x757e9b4bd0f30807510e96058a64d65006c5aef5",
@@ -123,6 +123,10 @@
         {
           "address": "0x9b09a7cdb687aacdbde725051195201aa6c91e9d",
           "amount": 745560.0
+        },
+        {
+          "address": "0xdf824f9748542aeed26d69303495091767caccbd",
+          "amount": 530749.0
         },
         {
           "address": "0x64fb27740df8f919c9ffb94c13c9c93722886cc4",
@@ -167,10 +171,6 @@
         {
           "address": "0x2a4d8c2d59919183e644031ef3204801495cbde6",
           "amount": 172000.0
-        },
-        {
-          "address": "0x21cf3fcc5cbfe35d42adad0e80f86974c2090a69",
-          "amount": 154556.0
         }
       ]
     }
@@ -179,31 +179,31 @@
     "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
     "incoming": {
       "total_senders": 1,
-      "total_amount": 244854920.3051254,
+      "total_amount": 251959634.5647665,
       "top_senders": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 244854920.3051254
+          "amount": 251959634.5647665
         }
       ]
     },
     "outgoing": {
       "total_receivers": 2,
-      "total_amount": 117842195.41765793,
+      "total_amount": 120719571.78464104,
       "top_receivers": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 117842195.37644881
+          "amount": 120719571.74323192
         },
         {
           "address": "0x0000000000000000000000000000000000000000",
-          "amount": 0.04120911643785835
+          "amount": 0.04140911643785835
         }
       ]
     }
   },
   "liquidity_providers": {
-    "total_count": 504,
+    "total_count": 514,
     "top_providers": [
       {
         "address": "0x9327e7fe800871886f20e118d875adb72d805f69",
@@ -224,15 +224,15 @@
         "total_out": 0
       },
       {
-        "address": "0x6f69b0f14c37c90e7cce8c019a09ad8e1f2f66a9",
-        "net_inflow": 5000000.0,
-        "total_in": 5000000.0,
+        "address": "0x095c188e20940129d9397186e564c7072c593637",
+        "net_inflow": 5395900.0,
+        "total_in": 5395900.0,
         "total_out": 0
       },
       {
-        "address": "0x095c188e20940129d9397186e564c7072c593637",
-        "net_inflow": 4945900.0,
-        "total_in": 4945900.0,
+        "address": "0x6f69b0f14c37c90e7cce8c019a09ad8e1f2f66a9",
+        "net_inflow": 5000000.0,
+        "total_in": 5000000.0,
         "total_out": 0
       },
       {
