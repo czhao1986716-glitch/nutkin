@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-03-06T03:24:40.211861+00:00",
+  "timestamp": "2026-03-07T03:11:32.595927+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
-      "total_senders": 567,
-      "total_amount": 468169155.2025872,
+      "total_senders": 573,
+      "total_amount": 472357566.4542756,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 143242330.88290933
+          "amount": 144771930.8829093
         },
         {
           "address": "0x757e9b4bd0f30807510e96058a64d65006c5aef5",
@@ -90,11 +90,11 @@
     },
     "outgoing": {
       "total_receivers": 44,
-      "total_amount": 315530742.5841209,
+      "total_amount": 318093693.7850546,
       "top_receivers": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 295239691.0905625
+          "amount": 297802642.2914962
         },
         {
           "address": "0x757e9b4bd0f30807510e96058a64d65006c5aef5",
@@ -179,21 +179,21 @@
     "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
     "incoming": {
       "total_senders": 1,
-      "total_amount": 295239707.6783968,
+      "total_amount": 297802659.0389864,
       "top_senders": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 295239707.6783968
+          "amount": 297802659.0389864
         }
       ]
     },
     "outgoing": {
       "total_receivers": 2,
-      "total_amount": 143242339.47912908,
+      "total_amount": 144771939.53748545,
       "top_receivers": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 143242339.4331157
+          "amount": 144771939.49147207
         },
         {
           "address": "0x0000000000000000000000000000000000000000",
@@ -203,7 +203,7 @@
     }
   },
   "liquidity_providers": {
-    "total_count": 566,
+    "total_count": 572,
     "top_providers": [
       {
         "address": "0x9327e7fe800871886f20e118d875adb72d805f69",
