@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-03-10T03:22:42.591644+00:00",
+  "timestamp": "2026-03-11T03:21:44.156338+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
-      "total_senders": 588,
-      "total_amount": 486384719.78696173,
+      "total_senders": 591,
+      "total_amount": 489457751.5198229,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 150743379.22900933
+          "amount": 152539094.25115713
         },
         {
           "address": "0x757e9b4bd0f30807510e96058a64d65006c5aef5",
@@ -90,11 +90,11 @@
     },
     "outgoing": {
       "total_receivers": 46,
-      "total_amount": 332111170.53111535,
+      "total_amount": 333714459.9789219,
       "top_receivers": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 308147775.57326347
+          "amount": 309751065.02107
         },
         {
           "address": "0x757e9b4bd0f30807510e96058a64d65006c5aef5",
@@ -179,31 +179,31 @@
     "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
     "incoming": {
       "total_senders": 1,
-      "total_amount": 308147792.7823042,
+      "total_amount": 309751082.3647714,
       "top_senders": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 308147792.7823042
+          "amount": 309751082.3647714
         }
       ]
     },
     "outgoing": {
       "total_receivers": 2,
-      "total_amount": 150743388.2858328,
+      "total_amount": 152539103.35108554,
       "top_receivers": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 150743388.23748124
+          "amount": 152539103.30253124
         },
         {
           "address": "0x0000000000000000000000000000000000000000",
-          "amount": 0.048351547247218254
+          "amount": 0.04855430556593034
         }
       ]
     }
   },
   "liquidity_providers": {
-    "total_count": 587,
+    "total_count": 590,
     "top_providers": [
       {
         "address": "0x9327e7fe800871886f20e118d875adb72d805f69",
