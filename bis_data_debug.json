@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-05-04T04:37:53.780642+00:00",
+  "timestamp": "2026-05-05T04:14:48.853729+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
       "total_senders": 746,
-      "total_amount": 771620082.418715,
+      "total_amount": 772555034.6762731,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 284784473.87966704
+          "amount": 284997473.87966704
         },
         {
           "address": "0xf80c5237cba4ef1e17ac4e09426a63757bf31ee3",
@@ -32,7 +32,7 @@
         },
         {
           "address": "0x30a2f9c70d48a9ea0bc3d089dc79e287a7d8e3de",
-          "amount": 6427583.604924104
+          "amount": 6927583.604924104
         },
         {
           "address": "0xb3220b7eeb9eab04d85b27a7b5866f790047812c",
@@ -90,11 +90,11 @@
     },
     "outgoing": {
       "total_receivers": 116,
-      "total_amount": 641325374.7382929,
+      "total_amount": 642805375.6649394,
       "top_receivers": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 518821913.36080974
+          "amount": 520301914.2874562
         },
         {
           "address": "0x30a2f9c70d48a9ea0bc3d089dc79e287a7d8e3de",
@@ -179,21 +179,21 @@
     "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
     "incoming": {
       "total_senders": 1,
-      "total_amount": 518821934.91329026,
+      "total_amount": 520301935.8443879,
       "top_senders": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 518821934.91329026
+          "amount": 520301935.8443879
         }
       ]
     },
     "outgoing": {
       "total_receivers": 2,
-      "total_amount": 284784490.5606157,
+      "total_amount": 284997490.59119284,
       "top_receivers": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 284784490.4436783
+          "amount": 284997490.47425544
         },
         {
           "address": "0x0000000000000000000000000000000000000000",
