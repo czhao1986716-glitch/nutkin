@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-05-15T04:45:13.451906+00:00",
+  "timestamp": "2026-05-16T04:25:48.857298+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
-      "total_senders": 797,
-      "total_amount": 1125255774.2597468,
+      "total_senders": 804,
+      "total_amount": 1149979402.8204143,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 422175752.4195261
+          "amount": 437352809.55156
         },
         {
           "address": "0x051973869f13e04f6cfe57c3d776329293a45a25",
@@ -89,12 +89,12 @@
       ]
     },
     "outgoing": {
-      "total_receivers": 135,
-      "total_amount": 973532274.9532429,
+      "total_receivers": 136,
+      "total_amount": 984016679.3208863,
       "top_receivers": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 805042151.9087334
+          "amount": 815104556.2763767
         },
         {
           "address": "0x757e9b4bd0f30807510e96058a64d65006c5aef5",
@@ -179,21 +179,21 @@
     "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
     "incoming": {
       "total_senders": 1,
-      "total_amount": 805042174.7544804,
+      "total_amount": 815104579.2253855,
       "top_senders": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 805042174.7544804
+          "amount": 815104579.2253855
         }
       ]
     },
     "outgoing": {
       "total_receivers": 2,
-      "total_amount": 422175772.681694,
+      "total_amount": 437352829.88149035,
       "top_receivers": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 422175772.5407894
+          "amount": 437352829.7405858
         },
         {
           "address": "0x0000000000000000000000000000000000000000",
@@ -203,7 +203,7 @@
     }
   },
   "liquidity_providers": {
-    "total_count": 796,
+    "total_count": 803,
     "top_providers": [
       {
         "address": "0x051973869f13e04f6cfe57c3d776329293a45a25",
