@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-06-07T05:20:04.860473+00:00",
+  "timestamp": "2026-06-08T05:26:21.634047+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
-      "total_senders": 831,
-      "total_amount": 1632222510.9152968,
+      "total_senders": 834,
+      "total_amount": 1632370620.9152968,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
@@ -203,7 +203,7 @@
     }
   },
   "liquidity_providers": {
-    "total_count": 830,
+    "total_count": 833,
     "top_providers": [
       {
         "address": "0x051973869f13e04f6cfe57c3d776329293a45a25",
