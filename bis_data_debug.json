@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-10-09T06:59:39.268980+00:00",
+  "timestamp": "2026-10-10T06:35:51.025398+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
-      "total_senders": 1067,
-      "total_amount": 2643812181.885479,
+      "total_senders": 1070,
+      "total_amount": 2645454341.119616,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 1622208515.4009564
+          "amount": 1623427401.6350935
         },
         {
           "address": "0x051973869f13e04f6cfe57c3d776329293a45a25",
@@ -90,11 +90,11 @@
     },
     "outgoing": {
       "total_receivers": 199,
-      "total_amount": 1972946798.1058414,
+      "total_amount": 1974504661.3181188,
       "top_receivers": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 1655245707.8001678
+          "amount": 1656803571.0124452
         },
         {
           "address": "0xe7fdea6882eac47f065ba2d333e8bf2d96b431f6",
@@ -179,31 +179,31 @@
     "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
     "incoming": {
       "total_senders": 1,
-      "total_amount": 1655245742.2448845,
+      "total_amount": 1656803605.4987054,
       "top_senders": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 1655245742.2448845
+          "amount": 1656803605.4987054
         }
       ]
     },
     "outgoing": {
       "total_receivers": 2,
-      "total_amount": 1622208548.6849098,
+      "total_amount": 1623427434.9763067,
       "top_receivers": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 1622208548.2853656
+          "amount": 1623427434.5766532
         },
         {
           "address": "0x0000000000000000000000000000000000000000",
-          "amount": 0.3995442265174834
+          "amount": 0.3996533290121322
         }
       ]
     }
   },
   "liquidity_providers": {
-    "total_count": 1066,
+    "total_count": 1069,
     "top_providers": [
       {
         "address": "0x051973869f13e04f6cfe57c3d776329293a45a25",
