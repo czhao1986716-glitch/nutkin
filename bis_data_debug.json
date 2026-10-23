@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-10-22T05:42:47.993974+00:00",
+  "timestamp": "2026-10-23T05:39:42.409240+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
       "total_senders": 1135,
-      "total_amount": 2739700229.7343564,
+      "total_amount": 2743111547.6680036,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 1666444124.2914307
+          "amount": 1667166598.4637382
         },
         {
           "address": "0x051973869f13e04f6cfe57c3d776329293a45a25",
@@ -90,15 +90,15 @@
     },
     "outgoing": {
       "total_receivers": 210,
-      "total_amount": 2114583096.699023,
+      "total_amount": 2115889443.144919,
       "top_receivers": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 1693661905.625833
+          "amount": 1694324534.398667
         },
         {
           "address": "0x8236785f48d9202119cf821a4be618abe051a7af",
-          "amount": 70493458.17137094
+          "amount": 71137175.84443286
         },
         {
           "address": "0x472748bc9e2adea85c531663f9e0d5c499b05920",
@@ -179,21 +179,21 @@
     "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
     "incoming": {
       "total_senders": 1,
-      "total_amount": 1693661941.3006182,
+      "total_amount": 1694324570.0954638,
       "top_senders": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 1693661941.3006182
+          "amount": 1694324570.0954638
         }
       ]
     },
     "outgoing": {
       "total_receivers": 2,
-      "total_amount": 1666444159.1313596,
+      "total_amount": 1667166633.323712,
       "top_receivers": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 1666444158.715071
+          "amount": 1667166632.9074235
         },
         {
           "address": "0x0000000000000000000000000000000000000000",
