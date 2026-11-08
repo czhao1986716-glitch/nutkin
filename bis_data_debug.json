@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-11-07T06:51:17.216020+00:00",
+  "timestamp": "2026-11-08T06:57:43.819097+00:00",
   "bis_swap": {
     "address": "0x62879BB3dD949c4CF06f71BF7c281DcF24D163e7",
     "incoming": {
-      "total_senders": 1174,
-      "total_amount": 2821718086.8018193,
+      "total_senders": 1175,
+      "total_amount": 2823161883.8541203,
       "top_senders": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 1703719684.2757263
+          "amount": 1704618907.4188325
         },
         {
           "address": "0x8236785f48d9202119cf821a4be618abe051a7af",
-          "amount": 27483628.43236377
+          "amount": 27994202.34155854
         },
         {
           "address": "0x051973869f13e04f6cfe57c3d776329293a45a25",
@@ -90,15 +90,15 @@
     },
     "outgoing": {
       "total_receivers": 221,
-      "total_amount": 2203314629.165683,
+      "total_amount": 2203909361.0645027,
       "top_receivers": [
         {
           "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
-          "amount": 1727389472.2580307
+          "amount": 1727968703.503995
         },
         {
           "address": "0x8236785f48d9202119cf821a4be618abe051a7af",
-          "amount": 97783157.7306178
+          "amount": 97798658.38347374
         },
         {
           "address": "0x472748bc9e2adea85c531663f9e0d5c499b05920",
@@ -179,21 +179,21 @@
     "address": "0x5463191b2705596b89e000fdcd60206daa2df8ff",
     "incoming": {
       "total_senders": 1,
-      "total_amount": 1727389509.3771758,
+      "total_amount": 1727968740.6595163,
       "top_senders": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 1727389509.3771758
+          "amount": 1727968740.6595163
         }
       ]
     },
     "outgoing": {
       "total_receivers": 2,
-      "total_amount": 1703719720.4480934,
+      "total_amount": 1704618943.6144204,
       "top_receivers": [
         {
           "address": "0x62879bb3dd949c4cf06f71bf7c281dcf24d163e7",
-          "amount": 1703719720.0285437
+          "amount": 1704618943.1948707
         },
         {
           "address": "0x0000000000000000000000000000000000000000",
@@ -203,7 +203,7 @@
     }
   },
   "liquidity_providers": {
-    "total_count": 1173,
+    "total_count": 1174,
     "top_providers": [
       {
         "address": "0x051973869f13e04f6cfe57c3d776329293a45a25",
